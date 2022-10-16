@@ -8,7 +8,7 @@ async function signUpRepository(name, email, password, res) {
             [email]
         );
         if(result.rowCount !== 0) {
-            return res.sendStatus(401);
+            return res.status(409).send("This email is already being used");
         }
         await connection.query(
             `INSERT INTO users (name, email, password) VALUES ($1, $2, $3);`,
