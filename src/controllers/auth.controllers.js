@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
-import { signUpRepository } from "../repositories/auth.repositories.js";
+import { getUserRepository, signUpRepository } from "../repositories/auth.repositories.js";
 
-const signUp = async (req, res) => {
+const signUp = (req, res) => {
     const body = res.locals.Body;
     const password = bcrypt.hashSync(body.confirmPassword, 12);
 
@@ -9,4 +9,11 @@ const signUp = async (req, res) => {
 
 };
 
-export {signUp}; 
+const signIn =  async (req, res) => {
+    const body = res.locals.Body;
+    
+    getUserRepository(body.email, body.password, res);
+        
+};
+
+export {signUp, signIn}; 
