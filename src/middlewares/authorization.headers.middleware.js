@@ -14,9 +14,18 @@ const validateHeaders = async (req, res, next) => {
     token = token.replace("Bearer ", "");
 
     try {
+        const result = await connection.query(
+            `SELECT token FROM sessions WHERE token = $1;`,
+            [token]
+        );
+
+        if(result.rowCount === 0) {
+            return res.sendStatus(401);
+        }
+
         const verifyToken = jwt.verify(token, process.env.TOKEN_SECRET);
 
-        if(!verifyToken) {
+        if(!verifyToken.userId) {
             return res.sendStatus(401);
         };
     
