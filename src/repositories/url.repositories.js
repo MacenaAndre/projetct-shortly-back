@@ -15,4 +15,23 @@ async function postUrlRespository(url, shortUrl, id, res) {
     }
 };
 
-export {postUrlRespository};
+async function getUrlRepository(id, res) {
+
+    try {
+        const result = await connection.query(
+            `SELECT id, "shortUrl", url FROM urls WHERE id = $1;`,
+            [id] 
+        )
+
+        if(result.rowCount === 0) {
+            return res.sendStatus(404);
+        }
+
+        return res.status(200).send(result.rows[0])
+
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+}
+
+export {postUrlRespository, getUrlRepository};

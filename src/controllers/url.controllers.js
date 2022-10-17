@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { postUrlRespository } from "../repositories/url.repositories.js";
+import { getUrlRepository, postUrlRespository } from "../repositories/url.repositories.js";
 
 
 const postUrlController = (req, res) => {
@@ -10,4 +10,10 @@ const postUrlController = (req, res) => {
     postUrlRespository(url, shortUrl, userId, res);
 };
 
-export {postUrlController};
+const getUrlController = (req, res) => {
+    const id = req.params.id;
+    
+    getUrlRepository(id, res);
+};
+
+export {postUrlController, getUrlController};
