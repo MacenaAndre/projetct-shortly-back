@@ -58,4 +58,36 @@ async function openUrlRepository(shortUrl, res) {
     }
 }
 
-export {postUrlRespository, getUrlRepository, openUrlRepository};
+async function deleteUrlRepository(userId, urlId, res) {
+
+    try {
+        const result = await connection.query(
+            `SELECT * FROM urls WHERE id = $1;`,
+            [urlId]
+        );
+
+        if(result.rowCount === 0) {
+            return res.sendStatus(404);
+        };
+
+        if(result.rows[0].userId !== userId) {
+            return res.sendStatus(401);
+        };
+
+        await connection.query(
+            `DELETE FROM visits WHERE "urlId" = $1;`,
+            [urlId]
+        )
+        await connection.query(
+            `DELETE FROM urls WHERE id = $1;`,
+            [urlId]
+        );
+
+        return res.sendStatus(204);
+
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+}
+
+export {postUrlRespository, getUrlRepository, openUrlRepository, deleteUrlRepository};
